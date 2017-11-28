@@ -191,7 +191,7 @@
     [_createGroupTip setHidden:YES];
     
     _tbGroups.userInteractionEnabled=YES;
-    _tbGroups.tableHeaderView = _tbHeader;
+//    _tbGroups.tableHeaderView = _tbHeader;
     _tbGroups.tableFooterView = [[UIView alloc] init];
     _tbGroups.dataSource = self;
     _tbGroups.delegate = self;
@@ -206,6 +206,8 @@
     
     CGFloat tbHeaderW = sw, tbHeaderH = tbHeaderW*0.1;
     _tbHeader.frame = CGRectMake(0, 0, tbHeaderW, tbHeaderH);
+    _tbGroups.tableHeaderView = _tbHeader;
+
     CGFloat tbHeaderTitleX= sw *0.05;
     CGFloat tbHeaderTitleH= tbHeaderTitleX;
     CGFloat tbHeaderTitleY= tbHeaderH /2.0 - tbHeaderTitleH /2.0;
@@ -268,6 +270,7 @@
 }
 
 #pragma mark - UITableViewDataSource
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
