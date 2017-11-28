@@ -172,13 +172,14 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     WFYUserInfo *user = _GroupMembers[indexPath.row];
+    NSLog(@"user: %@",user);
     //需要区分是组织架构成员还是会员 先默认为组织架构成员
     StaffInfoContr *c = [[StaffInfoContr alloc] init];
     StaffModel *staff= [[StaffModel alloc]init];
     staff.usrname=user.userId;
     staff.nickname = user.name;
     staff.avatarUri = user.portraitUri;
-    staff.email = user.email;
+//    staff.email = user.email;
     c.staff = staff;
     [self.navigationController pushViewController:c animated:YES];
 }
