@@ -1,0 +1,221 @@
+//
+//  WebViewContr.m
+//  jenkonportal-2
+//
+//  Created by 冯文林  on 2017/5/26.
+//  Copyright © 2017年 com.xia. All rights reserved.
+//
+
+#import "WebViewContr.h"
+#import <WebKit/WebKit.h>
+#import "XIProgressView.h"
+#import "SVProgressHUD.h"
+
+@interface WebViewContr ()<WKNavigationDelegate,WKUIDelegate>
+
+@end
+
+
+@interface WebViewContr ()
+
+@end
+
+@implementation WebViewContr
+{
+    WKWebView *_webview;
+    XIProgressView *_progressView;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor whiteColor];
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    [self initUI];
+    [self bindUIValue];
+    [self layoutUI];
+}
+
+- (void)dealloc
+{
+    [_progressView removeFromSuperview];
+    [_webview removeObserver:self forKeyPath:@"estimatedProgress"];
+}
+
+- (void)initUI
+{
+    _webview = [[WKWebView alloc] init];
+    [self.view addSubview:_webview];
+    
+    _progressView = [[XIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+    [self.navigationController.view addSubview:_progressView];
+    
+    _progressView.trackTintColor = [UIColor clearColor];
+    _progressView.progressTintColor = [UIColor whiteColor];
+}
+
+- (void)bindUIValue
+{
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    
+    [self clearWebViewCache];
+    _webview.navigationDelegate = self;
+    _webview.UIDelegate = self;
+    //    _webview.allowsBackForwardNavigationGestures = YES;
+    _webview.scrollView.bounces = NO;
+    [_webview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]]];
+    [_webview addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
+    
+    // 执行JS脚本
+    [_webview evaluateJavaScript:@"" completionHandler:^(id _Nullable re, NSError * _Nullable error) {
+        
+    }];
+}
+
+- (void)layoutUI
+{
+    CGFloat sw = SCREEN_WIDTH;
+    CGFloat sh = SCREEN_HEIGHT;
+    
+    CGFloat webViewTopMargin = kStatusBarH+kNaviBarH;
+    CGFloat webViewH = sh-webViewTopMargin, webViewY = webViewTopMargin;
+    _webview.frame = CGRectMake(0, webViewY, sw, webViewH);
+    _progressView.frame = (CGRect){0, 0, sw, 3};
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
+}
+
+#pragma mark - WKWebView
+
+- (void)clearWebViewCache
+{
+    //    NSSet *dataTypes = [NSSet setWithArray:@[
+    //                                             WKWebsiteDataTypeDiskCache,
+    //                                             //WKWebsiteDataTypeOfflineWebApplicationCache,
+    //                                             WKWebsiteDataTypeMemoryCache,
+    //                                            //WKWebsiteDataTypeLocalStorage,
+    //                                            //WKWebsiteDataTypeCookies,
+    //                                            //WKWebsiteDataTypeSessionStorage,
+    //                                            //WKWebsiteDataTypeIndexedDBDatabases,
+    //                                            //WKWebsiteDataTypeWebSQLDatabases
+    //                                            ]];
+    
+    NSSet *dataTypes = [WKWebsiteDataStore allWebsiteDataTypes];
+    NSDate *from = [NSDate dateWithTimeIntervalSince1970:0];
+    [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:dataTypes
+                                               modifiedSince:from completionHandler:^{
+                                               }];
+}
+
+#pragma mark - WKWebView Observer
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"estimatedProgress"]) {
+        
+        [_progressView setProgress:_webview.estimatedProgress animated:YES];
+        
+    }
+}
+
+#pragma mark - WKNavigationDelegate
+
+// 1 在发送请求之前
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+    decisionHandler(WKNavigationActionPolicyAllow);
+    [_progressView clear];
+}
+
+// 2 初次请求（有可能重定向）
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
+    
+}
+
+// 3 收到响应后
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler {
+    // 在收到服务器的响应头，根据response相关信息，决定是否跳转。decisionHandler必须调用，来决定是否跳转，参数WKNavigationActionPolicyCancel取消跳转，WKNavigationActionPolicyAllow允许跳转
+    decisionHandler(WKNavigationResponsePolicyAllow);
+}
+
+// 4 提交，并开始连接（有点类似Android的NSURLConnection接入流程）
+- (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation {
+    
+}
+
+// 5 下载完成
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
+    [_progressView done];
+}
+
+// 6 初次请求失败
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation {
+    [SVProgressHUD showInfoWithStatus:@"网络超时"];
+    XILog(@"页面加载失败");
+}
+
+// 发生重定向
+- (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation {
+    
+}
+
+// 下载失败
+- (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error {
+    
+    XILog(@"加载出错%@", error);
+}
+
+// ？ 需要响应身份验证时调用 同样在block中需要传入用户身份凭证
+- (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable credential))completionHandler {
+    //用户身份信息
+    XILog(@"需要响应身份验证");
+    
+    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+        
+        NSURLCredential *card = [[NSURLCredential alloc]initWithTrust:challenge.protectionSpace.serverTrust];
+        completionHandler(NSURLSessionAuthChallengeUseCredential,card);
+        
+    }else {
+    
+        NSURLCredential *newCred = [NSURLCredential credentialWithUser:@""
+                                                              password:@""
+                                                           persistence:NSURLCredentialPersistenceNone];
+        // 为 challenge 的发送方提供 credential
+        // [[challenge sender] useCredential:newCred forAuthenticationChallenge:challenge];
+        completionHandler(NSURLSessionAuthChallengeUseCredential, newCred);
+    }
+}
+
+// webview加载进程被终止
+- (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView {
+    
+}
+
+#pragma mark - WKUIDelegate
+
+- (void)webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler
+{
+    UIAlertController *nativeAlert = [UIAlertController alertControllerWithTitle:nil message:message preferredStyle:UIAlertControllerStyleAlert];
+    [nativeAlert addAction:[UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        completionHandler();
+    }]];
+    [self.navigationController presentViewController:nativeAlert animated:YES completion:nil];
+}
+
+- (void)webView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL))completionHandler
+{
+    UIAlertController *nativeAlert = [UIAlertController alertControllerWithTitle:nil message:message preferredStyle:UIAlertControllerStyleAlert];
+    [nativeAlert addAction:[UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        completionHandler(YES);
+    }]];
+    [nativeAlert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        completionHandler(NO);
+    }]];
+    [self.navigationController presentViewController:nativeAlert animated:YES completion:nil];
+}
+
+@end

@@ -1,0 +1,120 @@
+//
+//  XITagView.m
+//  jenkonportal-2
+//
+//  Created by 冯文林  on 2017/5/22.
+//  Copyright © 2017年 com.xia. All rights reserved.
+//
+
+#import "XITagView.h"
+#import "NSString+Kit.h"
+#import "AppFontMgr.h"
+#import "XICommonDef.h"
+
+@implementation XITagView
+{
+    NSMutableArray<UIView *> *_tags;
+}
+
+- (instancetype)init
+{
+    if (self = [super init]) {
+        [self initIvar];
+    }
+    return self;
+}
+
+- (void)initIvar
+{
+    _tagItems = [@[] mutableCopy];
+    _tags = [@[] mutableCopy];
+}
+
+- (void)reloadData
+{
+    [_tags enumerateObjectsUsingBlock:^(UIView * _Nonnull tag, NSUInteger idx, BOOL * _Nonnull stop) {
+        [tag removeFromSuperview];
+    }];
+    [_tags removeAllObjects];
+    
+    [self initUI];
+}
+
+- (void)initUI
+{
+    CGFloat w = self.bounds.size.width;
+    
+    CGFloat marginTagToLeft = w/56;
+    CGFloat marginTagToTop = w/36;
+    
+    UIFont *tagFont = [UIFont systemFontOfSize:[AppFontMgr standardFontSize]-3];
+    CGSize fitSize = CGSizeMake(MAXFLOAT, MAXFLOAT);
+    CGFloat tagH = [@"" sizeThatFit:fitSize withFont:tagFont].height;
+    
+    CGFloat hFix = w/36;
+    CGFloat wFix = hFix*1.2;
+    
+    tagH+=hFix;
+    
+    __block CGFloat tagX = 0;
+    __block CGFloat tagY = 0;
+    
+    NSMutableArray *nextTagXOfRows = [@[] mutableCopy];
+    
+    [nextTagXOfRows addObject:@(0)];
+    
+    [_tagItems enumerateObjectsUsingBlock:^(XITagModel * _Nonnull tagItem, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        CGFloat tagW = [tagItem.title sizeThatFit:fitSize withFont:tagFont].width;
+        tagW+=wFix;
+        
+        // 逐行检查是否能插入到行尾
+        __block BOOL didInsert = NO;
+        [nextTagXOfRows enumerateObjectsUsingBlock:^(NSNumber *  _Nonnull nextTagXNum, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            CGFloat nextTagX = [nextTagXNum floatValue];
+            if (w-(nextTagX+tagW)>0) {// 有足够的位置插入
+                tagX=nextTagX;
+                if (idx==0) {
+                    tagY=0;
+                }else {
+                    tagY=idx*(marginTagToTop+tagH);
+                }
+                nextTagXOfRows[idx] = @(nextTagX+tagW+marginTagToLeft);
+                didInsert = YES;
+                *stop = YES;
+            }
+            
+        }];
+        
+        if (!didInsert) {// 另起一行
+            tagX = 0;
+            tagY=nextTagXOfRows.count*(marginTagToTop+tagH);
+            [nextTagXOfRows addObject:@(tagW+marginTagToLeft)];
+        }
+        
+        CGRect frame = CGRectMake(tagX, tagY, tagW, tagH);
+
+        // style
+        UILabel *tag = [[UILabel alloc] init];
+        tag.frame = frame;
+        tag.font = tagFont;
+        tag.textAlignment = NSTextAlignmentCenter;
+        tag.textColor = RGB(153, 153, 153);
+        tag.text = tagItem.title;
+        [self addSubview:tag];
+        [_tags addObject:tag];
+        
+        tag.layer.borderColor = RGB(221, 221, 221).CGColor;
+        tag.layer.borderWidth = 1.0f;
+        tag.backgroundColor = [UIColor whiteColor];
+    }];
+    
+    self.frame = (CGRect){self.frame.origin, w, tagY+tagH};
+}
+
+@end
+
+@implementation XITagModel
+
+@end

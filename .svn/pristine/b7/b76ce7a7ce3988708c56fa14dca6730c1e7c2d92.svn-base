@@ -1,0 +1,46 @@
+//
+//  AppSession.m
+//  jenkonportal
+//
+//  Created by 冯文林  on 2017/5/11.
+//  Copyright © 2017年 com.xia. All rights reserved.
+//
+
+#import "AppSession.h"
+
+static AppSession *_session;
+
+@implementation AppSession
+
+#define _usrFilePath [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:@"usr.data"]
+
+- (void)updateUsrToDB
+{
+    [NSKeyedArchiver archiveRootObject:_usr toFile:_usrFilePath];
+}
+
+- (UsrModel *)loadUsrFromDB
+{
+    _usr = [NSKeyedUnarchiver unarchiveObjectWithFile:_usrFilePath];
+    return _usr;
+}
+
++ (instancetype)shareSession
+{
+    if (_session==nil) {
+        _session = [[AppSession alloc] init];
+    }
+    return _session;
+}
+
++ (instancetype)allocWithZone:(struct _NSZone *)zone
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _session = [super allocWithZone:zone];
+    });
+    return _session;
+
+}
+
+@end

@@ -1,0 +1,25 @@
+//
+//  AppConf.h
+//  jenkonportal
+//
+//  Created by 冯文林  on 17/5/9.
+//  Copyright © 2017年 com.xia. All rights reserved.
+//
+
+#ifndef AppConf_h
+#define AppConf_h
+
+// 融云app key
+#define rongIMAppKey @"kj7swf8okycq2"
+
+// 通知名
+#define kNotiName_didUsrChangeed @"didUsrChanged"
+
+// api url
+// alter by zl 20170815 请求服务的url有变化，将PhoneWebService.asmx修改为PhoneService.asmx
+#define kLoginApiUrl @"http://jenkon.vip:8078/PhoneService.asmx/Login"
+#define kDepartmentGetUrl @"http://jenkon.vip:8078/PhoneService.asmx/GetOrganizationalStructure"
+#define kStaffGetUrl  @"http://jenkon.vip:8078/PhoneService.asmx/GetUserList"
+#define kUsrInfoUrl @"http://jenkon.vip:8078/PhoneService.asmx/GetUserByName"
+
+#endif /* AppConf_h */

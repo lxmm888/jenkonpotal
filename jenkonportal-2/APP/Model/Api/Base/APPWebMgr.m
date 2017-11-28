@@ -1,0 +1,70 @@
+//
+//  APPWebMgr.m
+//  jenkonportal
+//
+//  Created by 冯文林  on 2017/5/11.
+//  Copyright © 2017年 com.xia. All rights reserved.
+//
+
+#import "APPWebMgr.h"
+#import "XICommonDef.h"
+
+@implementation APPWebMgr
+
++ (instancetype)manager
+{
+    APPWebMgr *mgr = [super manager];
+    if (mgr) {
+        //声明返回的结果是json类型
+        mgr.responseSerializer = [AFXMLParserResponseSerializer serializer];
+        // 声明请求的数据类型
+        mgr.requestSerializer = [AFHTTPRequestSerializer serializer];
+        
+        mgr.requestSerializer.timeoutInterval = 20;
+
+    }
+    return mgr;
+}
+
+- (void)method:(NSString *)method url:(NSString *)url charsParams:(NSDictionary *)params constructingBodyStream:(void (^)(id<AFMultipartFormData>))coustructing onSuccess:(void (^)(id))success onFailure:(void (^)(NSError *))failure
+{
+    // POST
+    if ([method isEqualToString:POST]) {
+        
+        [self POST:url parameters:params constructingBodyWithBlock:coustructing progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            
+            success(responseObject);
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            
+            failure(error);
+            
+        }];
+        
+    }
+    // GET
+    else if ([method isEqualToString:GET]) {
+        
+        [self GET:url parameters:params progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+
+            success(responseObject);
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        
+            failure(error);
+            
+        }];
+
+    }
+    // other..
+    else {
+        
+        NSDictionary *info = [NSDictionary dictionaryWithObject:@"只支持POST／GET" forKey:NSLocalizedDescriptionKey];
+        NSError *err = [NSError errorWithDomain:@"IceTea.APPWebDelegate" code:-1 userInfo:info];
+        failure(err);
+        
+    }
+    
+}
+
+@end

@@ -1,0 +1,102 @@
+//
+//  GroupChatsContr.m
+//  jenkonportal-2
+//
+//  Created by 冯文林  on 2017/5/22.
+//  Copyright © 2017年 com.xia. All rights reserved.
+//
+
+#import "GroupChatsContr.h"
+#import "AppFontMgr.h"
+#import "GroupChatsHelper.h"
+
+@interface GroupChatsContr ()<UITableViewDataSource, UITableViewDelegate>
+
+@end
+
+@implementation GroupChatsContr
+{
+    UIView *_tbHeader;
+    UILabel *_tbHeaderTitle;
+    UITableView *_groups;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    [self initUI];
+    
+//    [[GroupChatsHelper shareHelper] savaGroupChat:@"manage1test" :@"1"];
+}
+
+- (void)initUI
+{
+    [self createUI];
+    [self bindUIValue];
+    [self layoutUI];
+}
+
+- (void)createUI
+{
+    _tbHeader = [[UIView alloc] init];
+    _tbHeaderTitle = [[UILabel alloc] init];
+    _groups = [[UITableView alloc] init];
+    
+    [_tbHeader addSubview:_tbHeaderTitle];
+    [self.view addSubview:_groups];
+}
+
+- (void)bindUIValue
+{
+    self.title = @"群聊";
+    self.view.backgroundColor = RGB(245, 245, 245);
+    
+    _tbHeaderTitle.textColor = RGB(102, 102, 102);
+    _tbHeaderTitle.font = [UIFont systemFontOfSize:[AppFontMgr standardFontSize]-1];
+    _tbHeaderTitle.text = @"我加入的群";
+    
+    _groups.tableHeaderView = _tbHeader;
+    _groups.tableFooterView = [[UIView alloc] init];
+    _groups.dataSource = self;
+    _groups.delegate = self;
+}
+
+- (void)layoutUI
+{
+    CGFloat sw = SCREEN_WIDTH;
+    CGFloat sh = SCREEN_HEIGHT;
+    
+    CGFloat tbHeaderW = sw, tbHeaderH = tbHeaderW*0.1;
+    _tbHeader.bounds = CGRectMake(0, 0, tbHeaderW, tbHeaderH);
+    
+    CGFloat groupTopMargin = kStatusBarH+kNaviBarH;
+    CGFloat groupW = sw, groupH = sh-groupTopMargin, groupX = 0, groupY = groupTopMargin;
+    _groups.frame = CGRectMake(groupX, groupY, groupW, groupH);
+}
+
+#pragma mark - UITableViewDataSource
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return nil;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 0;
+}
+
+#pragma mark - UITableViewDelegate
+
+//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    return _cellHeight;
+//}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+
+@end

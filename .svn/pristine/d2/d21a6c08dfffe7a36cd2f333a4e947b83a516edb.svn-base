@@ -1,0 +1,135 @@
+//
+//  ChatContr.m
+//  jenkonportal
+//
+//  Created by 冯文林  on 2017/5/10.
+//  Copyright © 2017年 com.xia. All rights reserved.
+//
+
+#import "ChatContr.h"
+#import <RongCallKit/RongCallKit.h>
+
+#define chatCallViewTag 2000
+
+@interface ChatContr ()
+
+@end
+
+@implementation ChatContr
+{
+    UILabel *_backLabel;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    [self initUI];
+}
+
+- (void)initUI
+{
+    [self bindLeftItem];
+    [self bindUIValue];
+}
+
+- (void)bindLeftItem
+{
+    UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    backBtn.frame = CGRectMake(0, 6, 87, 23);
+    UIImageView *backImg = [[UIImageView alloc]
+                            initWithImage:[UIImage imageNamed:@"navi_back"]];
+    backImg.frame = CGRectMake(-6, 4, 10, 17);
+    [backBtn addSubview:backImg];
+    UILabel *backText = [[UILabel alloc] initWithFrame:CGRectMake(9, 4, 85, 17)];
+    [backText setBackgroundColor:[UIColor clearColor]];
+    [backText setTextColor:[UIColor whiteColor]];
+    [backBtn addSubview:backText];
+    [backBtn addTarget:self
+                action:@selector(tapBack:)
+      forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *leftButton =
+    [[UIBarButtonItem alloc] initWithCustomView:backBtn];
+    self.navigationItem.leftBarButtonItem = leftButton;
+    
+    _backLabel = backText;
+}
+
+- (void)bindUIValue
+{
+    self.enableUnreadMessageIcon = YES;
+    self.enableNewComingMessageIcon = YES;
+    
+    // 移除 加号-位置
+    [self.chatSessionInputBarControl.pluginBoardView removeItemWithTag:PLUGIN_BOARD_ITEM_LOCATION_TAG];
+    
+    [self.chatSessionInputBarControl.pluginBoardView insertItemWithImage:[UIImage imageNamed:@"actionbar_phone_icon"] title:@"通话" atIndex:2 tag:chatCallViewTag];
+    
+    // 左上未读数
+    [self notifyUpdateUnreadMessageCount];
+}
+
+- (void)tapBack:(id)sender
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+// override
+- (void)notifyUpdateUnreadMessageCount
+{
+    int count = [[RCIMClient sharedRCIMClient] getUnreadCount:@[
+                                                                @(ConversationType_PRIVATE),
+                                                                @(ConversationType_DISCUSSION),
+                                                                @(ConversationType_APPSERVICE),
+                                                                @(ConversationType_PUBLICSERVICE),
+                                                                @(ConversationType_GROUP)
+                                                                ]];
+    
+    NSString *backString = nil;
+    if (count > 0 && count < 1000) {
+        backString = [NSString stringWithFormat:@"消息(%d)", count];
+    } else if (count >= 1000) {
+        backString = @"消息(...)";
+    } else {
+        backString = @"消息";
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _backLabel.text = backString;
+    });
+}
+
+- (void)onCall
+{
+    if (self.conversationType==ConversationType_PRIVATE) {
+        
+        [[RCCall sharedRCCall] startSingleCall:self.targetId mediaType:RCCallMediaAudio];
+        
+    }else if (self.conversationType==ConversationType_DISCUSSION) {
+        
+        [[RCCall sharedRCCall] startMultiCall:ConversationType_DISCUSSION targetId:self.targetId mediaType:RCCallMediaAudio];
+        
+    }
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
+}
+
+#pragma mark - RCPluginBoardViewDelegate
+
+// override
+- (void)pluginBoardView:(RCPluginBoardView *)pluginBoardView clickedItemWithTag:(NSInteger)tag
+{
+    switch (tag) {
+        case chatCallViewTag:
+            [self onCall];
+            break;
+            
+        default:
+            [super pluginBoardView:pluginBoardView clickedItemWithTag:tag];
+            break;
+    }
+}
+
+@end

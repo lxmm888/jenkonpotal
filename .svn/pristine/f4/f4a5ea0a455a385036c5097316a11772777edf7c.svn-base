@@ -1,0 +1,57 @@
+//
+//  ZuZhiJiaGouApi.m
+//  jenkonportal-2
+//
+//  Created by 冯文林  on 2017/5/22.
+//  Copyright © 2017年 com.xia. All rights reserved.
+//
+
+#import "ZuZhiJiaGouApi.h"
+#import "DepartmentModel.h"
+#import "AppConf.h"
+
+@implementation ZuZhiJiaGouApi
+
+- (NSString *)url
+{
+    return kDepartmentGetUrl;
+}
+
+- (NSString *)method
+{
+    return POST;
+}
+
+- (ApiRespModel *)parseResultSet:(ApiRespModel *)webResp
+{
+    NSArray *arr = webResp.resultset;
+    DepartmentModel *dept = [self department:arr[0]];
+    webResp.resultset = @{self.departmentKeyName:dept};
+    return webResp;
+}
+
+- (DepartmentModel *)department:(NSDictionary *)deptDict
+{
+    DepartmentModel *dept = [[DepartmentModel alloc] init];
+    
+    dept.uid = [deptDict[@"DepartmentId"] integerValue];
+    dept.name = deptDict[@"DepartmentName"];
+    if (deptDict[@"childDeptList"]!=nil) {
+        NSArray *children = deptDict[@"childDeptList"];
+        
+        NSMutableArray *arr = [@[] mutableCopy];
+        [children enumerateObjectsUsingBlock:^(NSDictionary * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [arr addObject:[self department:obj]];
+        }];
+        dept.children = arr;
+        
+    }
+    return dept;
+}
+
+- (NSString *)departmentKeyName
+{
+    return @"department";
+}
+
+@end

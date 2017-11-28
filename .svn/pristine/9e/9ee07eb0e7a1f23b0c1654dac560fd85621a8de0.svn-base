@@ -1,0 +1,59 @@
+//
+//  ZuZhiJiaGou_getStaffApi.m
+//  jenkonportal-2
+//
+//  Created by 冯文林  on 2017/5/23.
+//  Copyright © 2017年 com.xia. All rights reserved.
+//
+
+#import "ZuZhiJiaGou_getStaffApi.h"
+#import "AppConf.h"
+#import "StaffModel.h"
+
+@implementation ZuZhiJiaGou_getStaffApi
+
+- (NSString *)url
+{
+    return kStaffGetUrl;
+}
+
+- (NSString *)method
+{
+    return GET;
+}
+
+- (NSDictionary *)charParams
+{
+    return @{@"departmentCatalogId":@(_departmentId)};
+}
+
+- (ApiRespModel *)parseResultSet:(ApiRespModel *)webResp
+{
+    NSArray *arr = webResp.resultset;
+    
+    NSMutableArray *re = [@[] mutableCopy];
+    [arr enumerateObjectsUsingBlock:^(NSDictionary *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [re addObject:[self staff:obj]];
+    }];
+    webResp.resultset = @{self.staffsKeyName:re};
+    
+    return webResp;
+}
+
+- (StaffModel *)staff:(NSDictionary *)dict
+{
+    StaffModel *staff = [[StaffModel alloc] init];
+    staff.uid = [dict[@"UserID"] integerValue];
+    staff.usrname = dict[@"UserName"];
+    staff.nickname = dict[@"NickName"];
+    staff.email = dict[@"Email"];
+    staff.avatarUri = [dict[@"Avatar"] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
+    return staff;
+}
+
+- (NSString *)staffsKeyName
+{
+    return @"staffs";
+}
+
+@end

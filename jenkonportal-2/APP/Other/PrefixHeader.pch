@@ -1,0 +1,46 @@
+//
+//  PrefixHeader.pch
+//  jenkonportal
+//
+//  Created by 赵立 on 2017/10/13.
+//  Copyright © 2017年 com.xia. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+/*** 如果希望某些内容能拷贝到任何源代码文件(OC\C\C++等), 那么就不要写在#ifdef __OBJC__和#endif之间 ***/
+/***** 在#ifdef __OBJC__和#endif之间的内容, 只会拷贝到OC源代码文件中, 不会拷贝到其他语言的源代码文件中 *****/
+#ifdef __OBJC__
+
+#import "AppConf.h"
+#import "WFYConst.h"
+#import "AppFontMgr.h"
+#import "WFHttpTool.h"
+#import "WFYTimeTool.h"
+#import "WFDataBaseManager.h"
+#import "NSString+XMGExtension.h"
+#import "NSDate+XMGExtension.h"
+#import "NSCalendar+XMGExtension.h"
+#import "NSString+Kit.h"
+
+#endif
+
+/*** 日志 ***/
+#ifdef DEBUG
+#define WFYLog(...) NSLog(__VA_ARGS__)
+#else
+#define WFYLog(...)
+#endif
+
+// 当前用户
+#define kUserId ([RCIM sharedRCIM].currentUserInfo.userId)
+
+#define WFYLogFunc XMGLog(@"%s", __func__);
+
+#define IOS_FSystenVersion ([[[UIDevice currentDevice] systemVersion] floatValue])
+
+#define DEFAULTS [NSUserDefaults standardUserDefaults]
+
+
+#endif /* PrefixHeader_pch */

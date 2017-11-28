@@ -1,0 +1,106 @@
+//
+//  ChatsContr.m
+//  jenkonportal
+//
+//  Created by 冯文林  on 2017/5/10.
+//  Copyright © 2017年 com.xia. All rights reserved.
+//
+
+#import "ChatsContr.h"
+#import "MJRefresh.h"
+#import "XICommonDef.h"
+#import "ChatContr.h"
+#import "APPTabBarContr.h"
+
+@interface ChatsContr ()
+
+@end
+
+@implementation ChatsContr
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    [self initUI];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self rebindUIValue];
+}
+
+- (void)initUI
+{
+    [self bindUIValue];
+}
+
+- (void)bindUIValue
+{
+    self.conversationListTableView.tableFooterView = [[UIView alloc] init];
+    
+    // 设置需要显示哪些类型的会话
+    [self setDisplayConversationTypes:@[@(ConversationType_PRIVATE),
+                                        @(ConversationType_DISCUSSION),
+                                        @(ConversationType_CHATROOM),
+                                        @(ConversationType_GROUP),
+                                        @(ConversationType_APPSERVICE),
+                                        @(ConversationType_SYSTEM)]];
+    
+    // 设置需要将哪些类型的会话在会话列表中聚合显示
+    [self setCollectionConversationType:@[/*@(ConversationType_DISCUSSION),
+                                          @(ConversationType_GROUP)*/]];
+    
+    
+
+}
+
+// override
+- (void)notifyUpdateUnreadMessageCount
+{
+    NSInteger count = [[RCIMClient sharedRCIMClient] getUnreadCount:@[
+                                                                      @(ConversationType_PRIVATE),
+                                                                      @(ConversationType_DISCUSSION),
+                                                                      @(ConversationType_APPSERVICE),
+                                                                      @(ConversationType_PUBLICSERVICE),
+                                                                      @(ConversationType_GROUP)
+                                                                      ]];
+    NSString *title = nil;
+    if (count>0&&count<10000) {
+        title = [NSString stringWithFormat:@"消息(%ld)", count];
+    }else {
+        title = @"消息";
+    }
+    
+    BOOL hideRedPoint = YES;
+    if (count>0) {
+        hideRedPoint ^= 1;
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.title = title;
+        
+        [(APPTabBarContr *)self.navigationController.tabBarController hideRedPoint:hideRedPoint :0];
+    });
+}
+
+- (void)rebindUIValue
+{
+    [self notifyUpdateUnreadMessageCount];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
+}
+
+- (void)onSelectedTableRow:(RCConversationModelType)conversationModelType conversationModel:(RCConversationModel *)model atIndexPath:(NSIndexPath *)indexPath
+{
+    ChatContr *conversationVC = [[ChatContr alloc]init];
+    conversationVC.conversationType = model.conversationType;
+    conversationVC.targetId = model.targetId;
+    conversationVC.title = model.conversationTitle;
+    [self.navigationController pushViewController:conversationVC animated:YES];
+}
+
+@end

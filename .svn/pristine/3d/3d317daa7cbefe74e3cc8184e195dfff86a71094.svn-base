@@ -1,0 +1,56 @@
+//
+//  BaseNaviContr.m
+//  jenkonportal
+//
+//  Created by 冯文林  on 2017/5/10.
+//  Copyright © 2017年 com.xia. All rights reserved.
+//
+
+#import "BaseNaviContr.h"
+#import "XICommonDef.h"
+
+@interface BaseNaviContr ()
+
+@end
+
+@implementation BaseNaviContr
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    [self initUI];
+}
+
+- (void)initUI
+{
+    [self bindUIValue];
+}
+
+- (void)bindUIValue
+{
+    // navi bar 风格
+    self.navigationBar.barTintColor = RGB(0, 90, 119);
+    [self.navigationBar setTitleTextAttributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:17],NSForegroundColorAttributeName:[UIColor whiteColor]}];
+    self.navigationBar.tintColor = [UIColor whiteColor];
+}
+
+// override
+// 非根控制器push时隐藏tabBar
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    if (self.viewControllers.count>0) {
+        viewController.hidesBottomBarWhenPushed = YES;
+    }else {
+        viewController.hidesBottomBarWhenPushed = NO;
+    }
+    
+    [super pushViewController:viewController animated:animated];
+}
+
+- (UIViewController *)childViewControllerForStatusBarStyle
+{
+    return self.topViewController;
+}
+
+@end

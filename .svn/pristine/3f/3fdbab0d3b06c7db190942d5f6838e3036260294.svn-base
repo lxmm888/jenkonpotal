@@ -1,0 +1,20 @@
+//
+//  NSString+Kit.m
+//  FamilyDrPerVer
+//
+//  Created by 冯文林 on 16/9/22.
+//  Copyright © 2016年 jetsun. All rights reserved.
+//
+
+#import "NSString+Kit.h"
+
+
+@implementation NSString (Kit)
+
+- (CGSize)sizeThatFit:(CGSize)fitSize withFont:(UIFont *)font
+{
+    CGSize textSize = [self boundingRectWithSize:fitSize options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:font} context:nil].size;
+    return textSize;
+}
+
+@end
