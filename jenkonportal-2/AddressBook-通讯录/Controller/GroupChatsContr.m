@@ -197,14 +197,15 @@
     _tbGroups.delegate = self;
 }
 
+//- viewfor
+
 - (void)layoutUI
 {
     CGFloat sw = SCREEN_WIDTH;
     CGFloat sh = SCREEN_HEIGHT;
     
     CGFloat tbHeaderW = sw, tbHeaderH = tbHeaderW*0.1;
-    _tbHeader.bounds = CGRectMake(0, 0, tbHeaderW, tbHeaderH);
-    
+    _tbHeader.frame = CGRectMake(0, 0, tbHeaderW, tbHeaderH);
     CGFloat tbHeaderTitleX= sw *0.05;
     CGFloat tbHeaderTitleH= tbHeaderTitleX;
     CGFloat tbHeaderTitleY= tbHeaderH /2.0 - tbHeaderTitleH /2.0;
