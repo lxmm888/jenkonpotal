@@ -205,7 +205,7 @@
     CGFloat sh = SCREEN_HEIGHT;
     
     CGFloat tbHeaderW = sw, tbHeaderH = tbHeaderW*0.1;
-    _tbHeader.frame = CGRectMake(0, 0, tbHeaderW, tbHeaderH);
+    _tbHeader.bounds = CGRectMake(0, 0, tbHeaderW, tbHeaderH);
     _tbGroups.tableHeaderView = _tbHeader;
 
     CGFloat tbHeaderTitleX= sw *0.05;

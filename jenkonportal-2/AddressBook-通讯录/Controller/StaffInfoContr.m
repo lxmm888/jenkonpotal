@@ -42,7 +42,7 @@
     UIButton *_videoCallBtn;
     
     XIMultiBgColorBtn *_groupChat;
-    UIImageView *_phone;
+    UIButton *_phone;
 }
 
 - (void)viewDidLoad {
@@ -117,7 +117,7 @@
     _videoCallBtn = [[UIButton alloc] init];
     _audioCallBtn = [[UIButton alloc] init];
     _groupChat = [[XIMultiBgColorBtn alloc] init];
-    _phone = [[UIImageView alloc] init];
+    _phone = [[UIButton alloc] init];
     
     [self.view addSubview:_header];
     [self.view addSubview:_apm];
@@ -174,7 +174,10 @@
     [_groupChat setBackgroundColorForStateNormal:[UIColor whiteColor] hightlighted: RGB(245, 245, 245)];
     [_groupChat addTarget:self action:@selector(createGroupChat) forControlEvents:UIControlEventTouchUpInside];
     
-    _phone.image = [UIImage imageNamed:@"vipInfo_phone"];
+//    _phone.imageView.image = [UIImage imageNamed:@"vipInfo_phone"];
+    [_phone setBackgroundImage:[UIImage imageNamed:@"vipInfo_phone"] forState:UIControlStateNormal];
+    [_phone addTarget:self action:@selector(phoneClick) forControlEvents:UIControlEventTouchUpInside];
+//    _phone.image = [UIImage imageNamed:@"vipInfo_phone"];
 }
 
 - (void)layoutUI
@@ -240,6 +243,15 @@
     CGRect frame = view.frame;
     frame.origin.x = frame.origin.x+dis;
     view.frame = frame;
+}
+
+- (void)phoneClick
+{
+//    @"tel://" stringByAppendingString:_staff
+//    [NSURL URLWithString:@"tel%@"]
+    [[UIApplication sharedApplication]openURL:[NSURL URLWithString:@"tel://10010"]];
+
+    NSLog(@"phoneBtn id clicking");
 }
 
 @end
