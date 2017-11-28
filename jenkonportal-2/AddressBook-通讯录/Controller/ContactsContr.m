@@ -134,7 +134,7 @@
     CGFloat sh = SCREEN_HEIGHT;
     
     CGFloat searchBarTopMarginToNaviBarBotm = kStatusBarH*0.4;
-    CGFloat searchBarW = sw*0.9, searchBarH = searchBarW*0.12, searchBarX = (sw-searchBarW)/2, searchBarY = searchBarTopMarginToNaviBarBotm;//kStatusBarH+kNaviBarH+searchBarTopMarginToNaviBarBotm;
+    CGFloat searchBarW = sw*0.9, searchBarH = searchBarW*0.10, searchBarX = (sw-searchBarW)/2, searchBarY = searchBarTopMarginToNaviBarBotm;//kStatusBarH+kNaviBarH+searchBarTopMarginToNaviBarBotm;
     _searchBar.frame = CGRectMake(searchBarX, searchBarY, searchBarW, searchBarH);
     [_searchBar layoutUI];
     

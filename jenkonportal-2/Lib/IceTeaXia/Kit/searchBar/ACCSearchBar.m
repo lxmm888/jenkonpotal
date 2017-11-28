@@ -45,13 +45,6 @@
     _textField = textField;
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-//    [textField.inputView resignFirstResponder];
-    [_textField resignFirstResponder];
-//    [self endEditing:YES];
-    return YES;
-}
 
 
 
@@ -125,6 +118,12 @@
 - (void)searchBarBeginEditing
 {
     [_textField becomeFirstResponder];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [_textField resignFirstResponder];
+    return YES;
 }
 
 - (void)handleTextFieldTextDidChange
