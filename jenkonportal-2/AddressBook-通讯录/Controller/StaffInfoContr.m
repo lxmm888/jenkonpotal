@@ -73,8 +73,9 @@
 - (void)initUI
 {
     [self createUI];
-    [self bindUIValue];
     [self layoutUI];
+
+    [self bindUIValue];
     [self bindUIValue2];
 }
 
@@ -154,30 +155,68 @@
     _subTel.label.text = @"分机：";
     
     //发消息
-    [_chat setImage:[UIImage imageNamed:@"vipInfo_chat_normal"] forState:UIControlStateNormal];
-    [_chat setImage:[UIImage imageNamed:@"vipInfo_chat_highlighted"] forState:UIControlStateHighlighted];
-    [_chat addTarget:self action:@selector(toChat) forControlEvents:UIControlEventTouchUpInside];
-    //视频
-    [_videoCallBtn setImage:[UIImage imageNamed:@"videoCall_normal"] forState:UIControlStateNormal];
-    [_videoCallBtn setImage:[UIImage imageNamed:@"videoCall_highlighted"] forState:UIControlStateHighlighted];
-    [_videoCallBtn addTarget:self action:@selector(btnVideoCall:) forControlEvents:UIControlEventTouchUpInside];
-    //语音
-    [_audioCallBtn setImage:[UIImage imageNamed:@"audioCall_normal"] forState:UIControlStateNormal];
-    [_audioCallBtn setImage:[UIImage imageNamed:@"audioCall_highlighted"] forState:UIControlStateHighlighted];
-    [_audioCallBtn addTarget:self action:@selector(btnAudioCall:) forControlEvents:UIControlEventTouchUpInside];
+    [self setButton:_chat withImageName:@"vipInfo_chat" title:@"发消息" method:@selector(toChat)];
+    [self setButton:_audioCallBtn withImageName:@"audioCall" title:@"语音通话" method:@selector(btnAudioCall:)];
+    [self setButton:_videoCallBtn withImageName:@"videoCall" title:@"视频通话" method:@selector(btnVideoCall:)];
     
-    [_groupChat setTitle:@"发起群聊" forState:UIControlStateNormal];
-    _groupChat.titleLabel.font = [UIFont systemFontOfSize:[AppFontMgr standardFontSize]+2];
-    [_groupChat setTitleColor:RGB(102, 102, 102) forState:UIControlStateNormal];
-    _groupChat.layer.borderColor = RGB(236, 236, 236).CGColor;
-    _groupChat.layer.borderWidth = 1.0f;
-    [_groupChat setBackgroundColorForStateNormal:[UIColor whiteColor] hightlighted: RGB(245, 245, 245)];
-    [_groupChat addTarget:self action:@selector(createGroupChat) forControlEvents:UIControlEventTouchUpInside];
     
-//    _phone.imageView.image = [UIImage imageNamed:@"vipInfo_phone"];
+    _phone.imageView.image = [UIImage imageNamed:@"vipInfo_phone"];
     [_phone setBackgroundImage:[UIImage imageNamed:@"vipInfo_phone"] forState:UIControlStateNormal];
-    [_phone addTarget:self action:@selector(phoneClick) forControlEvents:UIControlEventTouchUpInside];
 //    _phone.image = [UIImage imageNamed:@"vipInfo_phone"];
+    [_phone addTarget:self action:@selector(phoneClick) forControlEvents:UIControlEventTouchUpInside];
+
+    
+//    [_chat setBackgroundImage:[UIImage imageNamed:@"vipInfo_chat_normal"] forState:UIControlStateNormal];
+//    [_chat setBackgroundImage:[UIImage imageNamed:@"vipInfo_chat_highlighted"] forState:UIControlStateHighlighted];
+//    [_chat addTarget:self action:@selector(toChat) forControlEvents:UIControlEventTouchUpInside];
+    //视频
+//    _videoCallBtn setBackgroundImage:<#(nullable UIImage *)#> forState:<#(UIControlState)#>
+//    [_videoCallBtn setBackgroundImage:[UIImage imageNamed:@"videoCall"] forState:UIControlStateNormal];
+//    [_videoCallBtn setBackgroundImage:[UIImage imageNamed:@"videoCall_highlighted"] forState:UIControlStateHighlighted];
+//    [_videoCallBtn addTarget:self action:@selector(btnVideoCall:) forControlEvents:UIControlEventTouchUpInside];
+    //语音
+//    [_audioCallBtn setBackgroundImage:[UIImage imageNamed:@"audioCall_normal"] forState:UIControlStateNormal];
+//    [_audioCallBtn setBackgroundImage:[UIImage imageNamed:@"audioCall_highlighted"] forState:UIControlStateHighlighted];
+//    [_audioCallBtn addTarget:self action:@selector(btnAudioCall:) forControlEvents:UIControlEventTouchUpInside];
+//    
+//    [_groupChat setTitle:@"发起群聊" forState:UIControlStateNormal];
+//    _groupChat.titleLabel.font = [UIFont systemFontOfSize:[AppFontMgr standardFontSize]+2];
+//    [_groupChat setTitleColor:RGB(102, 102, 102) forState:UIControlStateNormal];
+//    _groupChat.layer.borderColor = RGB(236, 236, 236).CGColor;
+//    _groupChat.layer.borderWidth = 1.0f;
+//    [_groupChat setBackgroundColorForStateNormal:[UIColor whiteColor] hightlighted: RGB(245, 245, 245)];
+//    [_groupChat addTarget:self action:@selector(createGroupChat) forControlEvents:UIControlEventTouchUpInside];
+    
+}
+
+- (void)setButton:(UIButton *)btn withImageName:(NSString *)imageName title:(NSString *)title method:(SEL)action
+{
+    
+    [btn setBackgroundColor:[UIColor whiteColor]];
+    btn.layer.borderWidth = 1.0f;
+    [btn.layer setBorderColor:[UIColor colorWithRed:233/255.0 green:233/255.0 blue:233/255.0 alpha:1.0].CGColor];
+    btn.layer.cornerRadius = 4.0;
+    
+    CGFloat imageW = 25;//预先设定icon的宽度=高度
+    CGFloat topInset = (btn.frame.size.height - imageW) * 0.5;
+    [btn setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+    [btn setImage:[UIImage imageNamed:imageName] forState:UIControlStateHighlighted];
+    btn.imageView.contentMode = UIViewContentModeScaleAspectFit;
+
+//    btn.imageView
+    [btn setBackgroundImage:[UIImage imageNamed:@"btnBackgroundImage"] forState:UIControlStateHighlighted];
+    if ([title isEqualToString:@"发消息"]) {
+        [btn setImageEdgeInsets:UIEdgeInsetsMake(topInset, 0, topInset, 12)];
+
+    }else{
+        [btn setImageEdgeInsets:UIEdgeInsetsMake(topInset, 0, topInset, 0)];
+
+    }
+    [btn setTitle:title forState:UIControlStateNormal];
+    [btn setTitleColor:[UIColor colorWithRed:10/255.0 green:90/255.0 blue:118/255.0 alpha:1.0] forState:UIControlStateNormal];
+//    [btn setTitleColor:[UIColor colorWithRed:3/255.0 green:48/255.0 blue:62/255.0 alpha:1.0] forState:UIControlStateHighlighted];
+    [btn addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
+    
 }
 
 - (void)layoutUI
@@ -219,10 +258,12 @@
     
     CGFloat btnTopMarginToBtnBotm = cellH*0.2;
     CGFloat audioCallW = sw*0.87, audioCallH = chatW*0.13,audioCallX =(sw-chatW)/2,audioCallY = CGRectGetMaxY(_chat.frame)+btnTopMarginToBtnBotm;
-    _audioCallBtn.frame = CGRectMake(audioCallX, audioCallY, audioCallW, audioCallH);
-
+//    _audioCallBtn.frame = CGRectMake(audioCallX, audioCallY, audioCallW, audioCallH);
+    _audioCallBtn.frame = (CGRect){{audioCallX,audioCallY},_chat.frame.size};
+    
     CGFloat videoCallW = sw*0.87, videoCallH = chatW*0.13,videoCallX =(sw-chatW)/2,videoCallY = CGRectGetMaxY(_audioCallBtn.frame)+btnTopMarginToBtnBotm;
-    _videoCallBtn.frame = CGRectMake(videoCallX, videoCallY, videoCallW, videoCallH);
+    _videoCallBtn.frame = (CGRect){{videoCallX,videoCallY},_chat.frame.size};
+    //CGRectMake(videoCallX, videoCallY, videoCallW, videoCallH);
     
     CGFloat groupChatRightMargin = sw/24;
     CGFloat groupChatH = headerH*0.3, groupChatW = groupChatH*3, groupChatX = headerW-groupChatRightMargin-groupChatW, groupChatY = (headerH-groupChatH)/2;
@@ -247,8 +288,6 @@
 
 - (void)phoneClick
 {
-//    @"tel://" stringByAppendingString:_staff
-//    [NSURL URLWithString:@"tel%@"]
     [[UIApplication sharedApplication]openURL:[NSURL URLWithString:@"tel://10010"]];
 
     NSLog(@"phoneBtn id clicking");

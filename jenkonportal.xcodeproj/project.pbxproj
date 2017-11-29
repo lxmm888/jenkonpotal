@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		131EDDA41EE63C2A00770C02 /* UnreadBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = 131EDDA31EE63C2A00770C02 /* UnreadBadge.m */; };
-		136D68FF1ECA900C001BF8F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 136D68FE1ECA900C001BF8F7 /* Assets.xcassets */; };
 		136D690D1ECA900C001BF8F7 /* jenkonportal_2Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 136D690C1ECA900C001BF8F7 /* jenkonportal_2Tests.m */; };
 		136D69181ECA900C001BF8F7 /* jenkonportal_2UITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 136D69171ECA900C001BF8F7 /* jenkonportal_2UITests.m */; };
 		136D699D1ECA90BF001BF8F7 /* XIMultiBgColorBtn.m in Sources */ = {isa = PBXBuildFile; fileRef = 136D692A1ECA90BF001BF8F7 /* XIMultiBgColorBtn.m */; };
@@ -265,6 +264,7 @@
 		D9F387821FAAE2AF00D81490 /* NSDate+DateTools.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F3877A1FAAE2AF00D81490 /* NSDate+DateTools.m */; };
 		DF4C00D91FC7B6B500962879 /* testViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DF4C00D81FC7B6B500962879 /* testViewController.m */; };
 		DF4C00DD1FC7FBFF00962879 /* tab.m in Sources */ = {isa = PBXBuildFile; fileRef = DF4C00DC1FC7FBFF00962879 /* tab.m */; };
+		DFEFEB981FCE6C04002DE394 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFEFEB971FCE6C04002DE394 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -288,7 +288,6 @@
 		131EDDA21EE63C2A00770C02 /* UnreadBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnreadBadge.h; sourceTree = "<group>"; };
 		131EDDA31EE63C2A00770C02 /* UnreadBadge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnreadBadge.m; sourceTree = "<group>"; };
 		136D68EF1ECA900C001BF8F7 /* jenkonportal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = jenkonportal.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		136D68FE1ECA900C001BF8F7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		136D69031ECA900C001BF8F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		136D69081ECA900C001BF8F7 /* jenkonportalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = jenkonportalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		136D690C1ECA900C001BF8F7 /* jenkonportal_2Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = jenkonportal_2Tests.m; sourceTree = "<group>"; };
@@ -783,6 +782,7 @@
 		DF4C00D81FC7B6B500962879 /* testViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = testViewController.m; sourceTree = "<group>"; };
 		DF4C00DB1FC7FBFF00962879 /* tab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tab.h; sourceTree = "<group>"; };
 		DF4C00DC1FC7FBFF00962879 /* tab.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tab.m; sourceTree = "<group>"; };
+		DFEFEB971FCE6C04002DE394 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = "jenkonportal-2/Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -868,6 +868,7 @@
 			children = (
 				D93C62B01F6B752100FCA72C /* jenkonportal.entitlements */,
 				136D68F11ECA900C001BF8F7 /* jenkonportal-2 */,
+				DFEFEB971FCE6C04002DE394 /* Assets.xcassets */,
 				136D690B1ECA900C001BF8F7 /* jenkonportal-2Tests */,
 				136D69161ECA900C001BF8F7 /* jenkonportal-2UITests */,
 				136D68F01ECA900C001BF8F7 /* Products */,
@@ -900,7 +901,6 @@
 		136D68F21ECA900C001BF8F7 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				136D68FE1ECA900C001BF8F7 /* Assets.xcassets */,
 				136D69031ECA900C001BF8F7 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -2258,10 +2258,10 @@
 				136D6B581ECD7AD5001BF8F7 /* ACCSearchBar_clear.png in Resources */,
 				D9F3877B1FAAE2AF00D81490 /* DateTools.bundle in Resources */,
 				D9BFE6711F5D30E300501F20 /* RongCloudKit.strings in Resources */,
+				DFEFEB981FCE6C04002DE394 /* Assets.xcassets in Resources */,
 				D9BFE6721F5D30E300501F20 /* RongCloud.bundle in Resources */,
 				136D6B5A1ECD7AD5001BF8F7 /* ACCSearchBar_leftItem_white.png in Resources */,
 				136D6B591ECD7AD5001BF8F7 /* ACCSearchBar_leftItem_gray.png in Resources */,
-				136D68FF1ECA900C001BF8F7 /* Assets.xcassets in Resources */,
 				136D69B61ECA90BF001BF8F7 /* MJRefresh.bundle in Resources */,
 				D93C62A21F6B71C600FCA72C /* LaunchScreen.storyboard in Resources */,
 				D9BFE6771F5D30E300501F20 /* release_notes_ios.txt in Resources */,
